@@ -46,7 +46,17 @@ jobs:
         name: 'Unit Tests'            # Name of the check run which will be created
         path: '**/*.trx'              # Path to test results
         reporter: 'dotnet-trx'        # Format of test results
-    
+
+    - name: generate releasenotes
+      uses: XpiritCommunityEvents/ReleasenoteAction@main
+      with:
+          environment: ${{ toJSON(github) }}
+          owner: XpiritCommunityEvents
+          repo: marcelv
+          github_token: ${{ github.token }}
+          labelname: releasenote
+          markdownfile: releasenotes.md    
+
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v2.2.4
       with:
