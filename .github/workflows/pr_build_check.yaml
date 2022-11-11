@@ -26,8 +26,12 @@ jobs:
       working-directory: TailwindTraders.Website/Source/Tailwind.Traders.Web
       run: |
         dotnet build --configuration Release
+   
+    - name: Run rests
+      working-directory: TailwindTraders.Website/Source/Tailwind.Traders.Web
+      run: |
         dotnet test --logger "trx;LogFileName=test-results.trx" --configuration Release
-    
+
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: success() || failure()    # run this step even if previous step failed
