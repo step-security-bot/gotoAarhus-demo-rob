@@ -7,7 +7,7 @@ on:
     paths:
       - 'TailwindTraders.Website/**'
 jobs:
-  CI:
+  build:
     runs-on: ubuntu-latest
     steps:
 
@@ -39,4 +39,27 @@ jobs:
         name: 'Unit Tests'            # Name of the check run which will be created
         path: '**/*.trx'              # Path to test results
         reporter: 'dotnet-trx'        # Format of test results
-   
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: .net-app
+        path: ${{ runner.temp }}/Tailwind
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: .net-app
+          
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: '<yourappnamehere>'
+          slot-name: 'production'
+          publish-profile: '<publishData><publishProfile profileName="Tailwind-vslive - Web Deploy" publishMethod="MSDeploy" publishUrl="tailwind-vslive.scm.azurewebsites.net:443" msdeploySite="Tailwind-vslive" userName="$Tailwind-vslive" userPWD="5mCyEWmuEu81muTRvm1Li0cLLCuJcSZjLaiMQjeSkW8nFFn8WE4rT4Nahm0H" destinationAppUrl="https://tailwind-vslive.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="Tailwind-vslive - FTP" publishMethod="FTP" publishUrl="ftps://waws-prod-dm1-301.ftp.azurewebsites.windows.net/site/wwwroot" ftpPassiveMode="True" userName="Tailwind-vslive\$Tailwind-vslive" userPWD="5mCyEWmuEu81muTRvm1Li0cLLCuJcSZjLaiMQjeSkW8nFFn8WE4rT4Nahm0H" destinationAppUrl="https://tailwind-vslive.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile><publishProfile profileName="Tailwind-vslive - Zip Deploy" publishMethod="ZipDeploy" publishUrl="tailwind-vslive.scm.azurewebsites.net:443" userName="$Tailwind-vslive" userPWD="5mCyEWmuEu81muTRvm1Li0cLLCuJcSZjLaiMQjeSkW8nFFn8WE4rT4Nahm0H" destinationAppUrl="https://tailwind-vslive.azurewebsites.net" SQLServerDBConnectionString="" mySQLDBConnectionString="" hostingProviderForumLink="" controlPanelLink="http://windows.azure.com" webSystem="WebSites"><databases /></publishProfile></publishData>'
+          package: .
