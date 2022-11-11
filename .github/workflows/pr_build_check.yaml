@@ -26,13 +26,13 @@ jobs:
       working-directory: TailwindTraders.Website/Source
       run: |
         dotnet build --configuration Release
-        dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        dotnet publish -c Release -o ${{github.workspace}}/myapp
 
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v2
       with:
         name: .net-app
-        path: ${{env.DOTNET_ROOT}}/myapp
+        path: ${{github.workspace}}/myapp
 
     - name: Run rests
       working-directory: TailwindTraders.Website/Source
