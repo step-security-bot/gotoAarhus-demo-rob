@@ -1,4 +1,4 @@
-name: Build check on PR
+name: Build, Test, Publish and Deploy
 
 on:
   workflow_dispatch:    
