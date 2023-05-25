@@ -1,0 +1,47 @@
+name: Build, Test, Publish and Deploy
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'TailwindTraders.Website/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'TailwindTraders.Website/**'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@master
+
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.16.3    
+
+    - name: Install dependencies in client app
+      working-directory: TailwindTraders.Website/Source/Tailwind.Traders.Web/ClientApp
+      run: npm install
+
+    - name: Build and publish with dotnet
+      working-directory: TailwindTraders.Website/Source
+      run: |
+        dotnet build --configuration Release
+
+    - name: Run rests
+      working-directory: TailwindTraders.Website/Source
+      run: |
+        dotnet test --logger "trx;LogFileName=test-results.trx" --configuration Release
+
+    - name: Publish with dotnet
+      working-directory: TailwindTraders.Website/Source
+      run: |
+        dotnet publish -c Release -o ${{github.workspace}}/myapp
+
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: .net-app
+        path: ${{github.workspace}}/myapp
