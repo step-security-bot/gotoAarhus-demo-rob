@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'TailwindTraders.Website/**'
+      - .github/workflows/github-actions-demo.yml
   pull_request:
     branches: [ main ]
     paths:
