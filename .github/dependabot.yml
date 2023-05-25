@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /TailwindTraders.Website/.devcontainer
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /TailwindTraders.Website/Source/Tailwind.Traders.Web.Tests
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /TailwindTraders.Website/Source/Tailwind.Traders.Web/ClientApp
+    schedule:
+      interval: daily
+
+  - package-ecosystem: docker
+    directory: /TailwindTraders.Website/Source/Tailwind.Traders.Web
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /TailwindTraders.Website/Source/Tailwind.Traders.Web
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /TailwindTradersBotComposer
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /TailwindTradersBotComposer/scripts
+    schedule:
+      interval: daily

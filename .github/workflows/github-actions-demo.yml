@@ -15,10 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@master
+    - name: Harden Runner
+      uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+      with:
+        egress-policy: audit
+
+    - uses: actions/checkout@61b9e3751b92087fd0b06925ba6dd6314e06f089 # master
 
     - name: Setup Node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@f1f314fca9dfce2769ece7d933488f076716723e # v1.4.6
       with:
         node-version: 10.16.3    
 
@@ -42,13 +47,13 @@ jobs:
         dotnet publish -c Release -o ${{github.workspace}}/myapp
 
     - name: Upload artifact for deployment job
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # v2.3.1
       with:
         name: .net-app
         path: ${{github.workspace}}/myapp
         
     - name: generate releasenotes
-      uses: XpiritCommunityEvents/ReleasenoteAction@main
+      uses: XpiritCommunityEvents/ReleasenoteAction@ac14eb13296e035839e9ded811e386d30e088a2c # main
       with:
           environment: ${{ toJSON(github) }}
           owner: XpiritCommunityEvents
@@ -62,13 +67,18 @@ jobs:
     needs: build
     
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        with:
+          egress-policy: audit
+
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@cbed621e49e4c01b044d60f6c80ea4ed6328b281 # v2.1.1
         with:
           name: .net-app
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@fb8292eb575db1bb18a90627e8959cd51dbb355c # v2.2.10
         with:
           app-name: 'web-demo-rob'
           slot-name: 'production'
