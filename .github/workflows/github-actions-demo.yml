@@ -46,6 +46,16 @@ jobs:
       with:
         name: .net-app
         path: ${{github.workspace}}/myapp
+        
+    - name: generate releasenotes
+      uses: XpiritCommunityEvents/ReleasenoteAction@main
+      with:
+          environment: ${{ toJSON(github) }}
+          owner: XpiritCommunityEvents
+          repo: ReleasenoteAction
+          github_token: ${{ github.token }}
+          labelname: releasenote
+          markdownfile: releasenotes.md
 
   deploy:
     runs-on: ubuntu-latest
